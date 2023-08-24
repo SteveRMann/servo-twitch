@@ -1,14 +1,8 @@
-AtmosFx Download Link.txt
-Pumpkin Videos/Jack-O-Lantern Jamboree 3*
-Pumpkin Videos/*.bak
-Pumpkin Videos/*.zip
-Pumpkin Videos/*.sfk
-Sounds/Growls/*.sfk
-Sounds/Growls/*.bak
-~$*.xlsx
+*.bak
+*.sfk
+*.xlsx
 
 ######## Ignore list for Eagle, a PCB layout tool ##########
-
 # Backup files
 *.s#?
 *.b#?
@@ -17,8 +11,7 @@ Sounds/Growls/*.bak
 *.s$?
 *.l$?
 
-# Eagle project file
-# It contains a serial number and references to the file structure
+# Eagle project file. It contains a serial number and references to the file structure
 # on your computer.
 # comment the following line if you want to have your project file included.
 eagle.epf
@@ -38,22 +31,14 @@ eagle.epf
 *.sts
 *.crc
 *.crs
-
 *.dri
 *.drl
 *.gpi
 *.pls
 *.ger
 *.xln
-
 *.drd
 *.drd.*
-
-*.s#*
-*.b#*
-
-*.info
-
 *.eps
 
 # file locks introduced since 7.x
