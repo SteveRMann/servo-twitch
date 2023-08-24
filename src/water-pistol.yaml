@@ -1,0 +1,96 @@
+# Original code and tutprial
+# https://www.speaktothegeek.co.uk/2022/07/esphome-wifi-water-pistol/
+
+substitutions:
+  device_name: water-pistol
+  friendly_name: water_pistol
+
+packages:
+  wifi: !include common/wifi.yaml
+  device_base: !include common/esp8266.yaml
+#Override the default board:
+esp8266:
+  board: d1_mini
+
+# Blink an LED if there's a problem, solid on otherwise.    
+# The built-in LED is D4 (GPIO2) on the Wemos D1 Mini    
+status_led:
+  pin:
+    number: D4
+    inverted: True
+
+######################################################
+
+output:
+  - platform: esp8266_pwm
+    id: pwm_output
+    pin: D1
+    frequency: 50 Hz
+
+servo:
+  - id: pistol_servo
+    output: pwm_output
+    restore: true
+
+number:
+  - platform: template
+    name: ${device_name} - Servo Control
+    min_value: -100
+    max_value: 100
+    step: 1
+    set_action:
+      then:
+        - servo.write:
+            id: pistol_servo
+            level: !lambda 'return x / 100.0;'
+            
+button:
+  - platform: template
+    name: ${device_name} - Fire
+    id: water_pistol_fire
+    icon: "mdi:liquid-spot"
+    on_press:
+      then:
+        - script.execute: fire_pistol_once
+
+  - platform: template
+    name: ${device_name} - Rapid Fire
+    id: water_pistol_rapid_fire
+    icon: "mdi:liquid-spot"
+    on_press:
+      then:
+        - script.execute: fire_pistol_once
+        - delay: !lambda "return 300;"
+        - script.execute: fire_pistol_once
+        - delay: !lambda "return 300;"
+        - script.execute: fire_pistol_once
+        - delay: !lambda "return 300;"
+        - script.execute: fire_pistol_once
+        - delay: !lambda "return 300;"
+        - script.execute: fire_pistol_once
+
+
+binary_sensor:
+  - platform: gpio
+    name: ${device_name} - trigger
+    pin:
+      number: D2
+      mode: input_pullup
+      inverted: True
+    id: button_fire
+    on_press:
+      then:
+        - script.execute: fire_pistol_once
+    
+
+script:
+  - id: fire_pistol_once
+    then:
+      - servo.write:
+          id: pistol_servo
+          level: 87.0%
+      - delay: !lambda "return 200;"
+      - servo.write:
+          id: pistol_servo
+          level: 0%
+          
